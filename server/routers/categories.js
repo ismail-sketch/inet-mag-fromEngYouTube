@@ -24,6 +24,7 @@ import { Category } from "../models/Category.js";
     }
 
     await category.save();
+    sdf
     res.json(category);
   });
 
