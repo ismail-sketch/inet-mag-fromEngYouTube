@@ -5,7 +5,7 @@ const productSchema = new Schema({
         type: String,
         required: true
     },
-    decription: {
+    description: {
         type: String,
         required: true
     },
@@ -21,8 +21,8 @@ const productSchema = new Schema({
         type: String,
     }],
     brand: {
-        type: Number,
-        default: 0
+        type: String,
+        default: ''
     },
     price: {
         type: String,
