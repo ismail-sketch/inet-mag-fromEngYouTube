@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router()
 import { Category } from "../models/Category.js";
+import mongoose from "mongoose";
 
 // Получение всех категорий
   router.get('/', async (req, res) => {
@@ -14,6 +15,9 @@ import { Category } from "../models/Category.js";
 
   // Получение одной категории
   router.get('/:id', async (req, res) => {
+    if(!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(400).send('Неверный ID')
+    }
     try {
       const category = await Category.findById(req.params.id)
       if(!category) {

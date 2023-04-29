@@ -12,7 +12,7 @@ import cors from 'cors'
 
 const app = express()
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 5001
 const api = process.env.API_URL
 
 app.use(cors())
