@@ -1,0 +1,71 @@
+
+.reg-auth {
+    padding-top: 20px;
+    padding-bottom: 50px;
+    h1 {
+        text-align: center;
+    }
+}
+
+.reg-auth-form {
+    width: 400px;
+    padding: 30px 15px;
+    margin: 0 auto;
+    margin-top: 30px;
+    box-shadow: 0px 2px 8px -1px rgba(34, 60, 80, 0.25);
+    border-radius: 7px;
+    input, label, button {
+        display: block;
+    }
+    label {
+        span {
+            margin-bottom: 5px;
+            display: block;
+        }
+    }
+    input, button {
+        width: 100%;
+        height: 40px;
+        border-radius: 3px;
+        border: 1px solid #bababa;
+        padding: 0 10px;
+    }
+    input {
+        margin-bottom: 15px;
+    }
+    button {
+        background-color: #76bc21;
+        color: #fff;
+        text-transform: uppercase;
+        margin-top: 10px;
+        transition: all .2s;
+        @media (any-hover: hover) {
+            &:hover {
+                background-color: #63a117;
+            }
+        }
+    }
+}
+.question {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    span, a {
+        display: block;
+        font-size: 14px;
+        color: #76bc21;
+        margin-top: 10px;
+    }
+    a {
+        border: 1px solid #76bc21;
+        padding: 3px 5px;
+        transition: all .2s;
+        border-radius: 2px;
+        @media (any-hover: hover) {
+            &:hover {
+                color: #fff;
+                background-color: #76bc21;
+            }
+        }
+    }
+}

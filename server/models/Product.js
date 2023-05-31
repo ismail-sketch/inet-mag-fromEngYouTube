@@ -7,18 +7,13 @@ const productSchema = new Schema({
     },
     description: {
         type: String,
-        required: true
     },
     richDescription: {
         type: String,
         default: ''
     },
-    image: {
-        type: String,
-        default: ''
-    },
     images: [{
-        type: String,
+        type: Object,
     }],
     brand: {
         type: String,
@@ -53,8 +48,12 @@ const productSchema = new Schema({
     },
     dateCreated: {
         type: Date,
-        default: Date.now
+        // default: Date.now,
+        default: new Date()
     },
+    index: {
+        type: String
+    }
 })
 export const Product = mongoose.model('Product', productSchema)
 

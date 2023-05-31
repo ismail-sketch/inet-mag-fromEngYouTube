@@ -3,28 +3,35 @@ const router = express.Router()
 import { Product } from "../models/Product.js";
 import { Category } from "../models/Category.js";
 import mongoose from "mongoose";
+import multer from "multer";
+const upload = multer({ dest: 'images/' })
+
 
 // Добавление продукта
-router.post('/', async (req, res) => {
+router.post('/', upload.array('images'), async (req, res) => {
   try {
     const category = await Category.findById(req.body.category)//Категория здесь нужна для того, чтобы проверить, существует ли такая категория
     if(!category) return res.status(400).send('Такой категории не существует')
+
 
     let product = new Product({
       name: req.body.name,
       description: req.body.description,
       richDescription: req.body.richDescription,
-      image: req.body.image,
-      images: req.body.images,
+      images: req.files,
       brand: req.body.brand,
       price: req.body.price,
       category: category,
-      countInStock: req.body.countInStock,
+      countInStock: '24',
       rating: req.body.rating,
       numReviews: req.body.numReviews,
       isFuetured: req.body.isFuetured,
       dateCreated: req.body.dateCreated,
     });
+
+
+    console.log(product);
+
     product = await product.save()
     if(!product) {
       return res.status(500).send('Не удается создать продукт')
@@ -37,18 +44,68 @@ router.post('/', async (req, res) => {
 
   });
 
+  // Обновление продукта==========================
+  router.put('/:id', upload.array('images'), async (req, res) => {
+
+    try{
+      const category = await Category.findById(req.body.category)//Категория здесь нужна для того, чтобы проверить, существует ли такая категория
+      const product = await Product.findByIdAndUpdate(
+        req.params.id,
+        {
+          name: req.body.name,
+          description: req.body.description,
+          richDescription: req.body.richDescription,
+          // images: req.files,
+          brand: req.body.brand,
+          price: req.body.price,
+          category: category,
+          countInStock: '24',
+          rating: req.body.rating,
+          numReviews: req.body.numReviews,
+          isFuetured: req.body.isFuetured,
+          dateCreated: req.body.dateCreated,
+          index: req.body.index
+        },
+        {new: true}
+      )
+       if(!product) {
+        return res.status(400).json({message: "Не удалось обновить товар..."})
+      }
+      return res.status(200).send(product)
+
+    }catch (err) {
+      console.log(`Ошибка: ${err}`)
+    }
+  })
+
 // Получение всех продуктов
 router.get('/', async (req, res) => {
   try {
     // const productList =  await Product.find().select('name image -_id')
-    const productList =  await Product.find().populate('category')
-
+    // const productList =  await Product.find().populate('category')
+    const productList = await Product.find()
     if(!productList) {
         return res.status(500).json({message: 'Что-то пошло не так...'})
     }
     return res.json(productList)
   } catch (err) {
     console.log(err);
+  }
+
+})
+
+// Удаление продукта
+router.delete('/:id/:name', async (req, res) => {
+  try {
+      const product = await Product.findByIdAndRemove(req.params.id)
+      // deleteImgSlide(req.params.name)
+      if(product) {
+          return res.status(200).json({success: true, message: 'Товар удален', id: req.params.id})
+      } else {
+          return res.status(404).json({success: false, message: 'Товар не найден...'})
+      }
+  } catch (e) {
+      return res.status(400).json({success: false, error: e})
   }
 
 })

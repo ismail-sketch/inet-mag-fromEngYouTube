@@ -1,0 +1,21 @@
+
+
+.mainSlider {
+    &__slide {
+        background-color: #ffebeb;
+        height: 300px;
+        position: relative;
+
+        img {
+            top: 0;
+            left: 0;
+        }
+    }
+    &__text-wrp {
+        position: absolute;
+        padding: 20px 15px;
+    }
+    &__title {}
+    &__desc {}
+
+}

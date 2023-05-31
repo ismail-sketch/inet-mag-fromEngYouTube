@@ -2,6 +2,17 @@ import express from "express";
 const router = express.Router()
 import { Category } from "../models/Category.js";
 import mongoose from "mongoose";
+import multer from "multer";
+const upload = multer({dest: 'images/'})
+import {unlink} from 'node:fs'
+
+// Функция удаления файла из папки
+const deleteImgSlide = (name) => {
+  unlink(`images/${name}`, (err) => {
+    if (err) throw err;
+    console.log('path/file.txt was deleted');
+  });
+}
 
 // Получение всех категорий
   router.get('/', async (req, res) => {
@@ -31,30 +42,35 @@ import mongoose from "mongoose";
   })
 
 // Создание категории
-  router.post('/', async (req, res) => {
-    const category = new Category({
+  router.post('/',  upload.single('slide'), async (req, res) => {
+    try {
+      const category = new Category({
       name: req.body.name,
-      icon: req.body.icon,
       color: req.body.color,
+      icon: req.file
     });
 
     if (!category) {
         return res.status(404).send('Не удалось создать категорию...')
     }
-
     await category.save();
     res.json(category);
+    } catch (err) {
+      console.log('Ошибка' + err);
+    }
+
   });
 
   // Обновление категории==========================
-  router.put('/:id', async (req, res) => {
+  router.put('/:id', upload.single('slide'), async (req, res) => {
     try{
       const category = await Category.findByIdAndUpdate(
         req.params.id,
         {
           name: req.body.name,
-          icon: req.body.icon,
-          color: req.body.color
+          icon: req.file,
+          color: req.body.color,
+          index: req.body.index
         },
         {new: true}
       )
@@ -69,11 +85,12 @@ import mongoose from "mongoose";
   })
 
   // Удаление категории
-  router.delete('/:id', async (req, res) => {
+  router.delete('/:id/:name', async (req, res) => {
     try {
         const category = await Category.findByIdAndRemove(req.params.id)
+        deleteImgSlide(req.params.name)
         if(category) {
-            return res.status(200).json({success: true, message: 'Категория удалена'})
+            return res.status(200).json({success: true, message: 'Категория удалена', id: req.params.id})
         } else {
             return res.status(404).json({success: false, message: 'Категория не найдена...'})
         }
